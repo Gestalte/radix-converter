@@ -40,8 +40,13 @@
 ; Non-UI
 
 (define decimal-changed (lambda (text-field event)
-                          (define input (send text-field get-value))
-                          (define octal (
+                          (define input (string->number (send text-field get-value)))
+                          (define octal (~r input #:base 8))
+                          (define hex (~r input #:base '(up 16)))
+                          (define binary (~r input #:base 2))
+                          (send text-field-octal set-value octal)
+                          (send text-field-hex set-value hex)
+                          (send text-field-binary set-value binary)
                           (print input)))
 
 (define octal-changed (lambda (text-field event)
