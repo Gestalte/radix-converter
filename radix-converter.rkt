@@ -100,19 +100,27 @@
                               (set-values input)))))
 
 (define hex-changed (lambda (text-field event)
-                      ; TODO: If input contains [^0-9A-F] show error
-                      (define input (send text-field get-value))
-                      (define input-list (reverse (string->list input)))
-                      (define input-as-decimal (convert-radix-number-to-decimal input-list 0 16))
-                      
-                      (define octal (~r input-as-decimal #:base 8))
-                      (define binary (~r input-as-decimal #:base 2))
+                      (define show-error (lambda ()
+                                           (send text-field-decimal set-value "Error")
+                                           (send text-field-octal set-value "Error")
+                                           (send text-field-binary set-value "Error")))
 
-                      (send text-field-decimal set-value (number->string input-as-decimal))
-                      (send text-field-octal set-value octal)                      
-                      (send text-field-binary set-value binary)
+                      (define set-values (lambda (num)
+                                           (define input-list (reverse (string->list num)))
+                                           (define input-as-decimal (convert-radix-number-to-decimal input-list 0 16))
+                                           (define octal (~r input-as-decimal #:base 8))
+                                           (define binary (~r input-as-decimal #:base 2))
+                                           (send text-field-decimal set-value (number->string input-as-decimal))
+                                           (send text-field-octal set-value octal)
+                                           (send text-field-hex set-value (string-upcase num))
+                                           (send text-field-binary set-value binary)))
+
+                      (define input (send text-field get-value))
                       
-                      (print input)))
+                      (if (regexp-match "[^0-9A-F]" (string-upcase input))
+                          (show-error)
+                          (when (> (string-length input) 0)
+                            (set-values input)))))
 
 (define binary-changed (lambda (text-field event)
                          ; TODO: If input contains [^0-1] show error
