@@ -123,17 +123,26 @@
                             (set-values input)))))
 
 (define binary-changed (lambda (text-field event)
-                         ; TODO: If input contains [^0-1] show error
+                         (define show-error (lambda ()
+                                              (send text-field-decimal set-value "Error")
+                                              (send text-field-octal set-value "Error")
+                                              (send text-field-hex set-value "Error")))
+
+                         (define set-values (lambda (num)
+                                              (define input-list (reverse (string->list num)))
+                                              (define input-as-decimal (convert-radix-number-to-decimal input-list 0 2))
+
+                                              (define octal (~r input-as-decimal #:base 8))
+                                              (define hex (~r input-as-decimal #:base '(up 16)))
+
+                                              (send text-field-decimal set-value (number->string input-as-decimal))
+                                              (send text-field-octal set-value octal)                      
+                                              (send text-field-hex set-value hex)))
+
                          (define input (send text-field get-value))
-                         (define input-list (reverse (string->list input)))
-                         (define input-as-decimal (convert-radix-number-to-decimal input-list 0 2))
-
-                         (define octal (~r input-as-decimal #:base 8))
-                         (define hex (~r input-as-decimal #:base '(up 16)))
-
-                         (send text-field-decimal set-value (number->string input-as-decimal))
-                         (send text-field-octal set-value octal)                      
-                         (send text-field-hex set-value hex)
                          
-                         (print input)))
+                         (if (regexp-match "[^0-1]" (string-upcase input))
+                             (show-error)
+                             (when (> (string-length input) 0)
+                               (set-values input)))))
 
