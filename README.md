@@ -4,4 +4,4 @@ A small GUI application that does conversions between decimal, octal, hexadecima
 
 ## Screen shot
 
-![screenshot](https://github.com/Gestalte/radix-converter/blob/master/screenshot.png?raw=true)
+![screenshot](https://github.com/Gestalte/radix-converter/blob/Master/screenshot.png?raw=true)
