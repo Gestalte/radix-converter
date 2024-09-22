@@ -56,16 +56,21 @@
                                               (+ (calc (car lst) counter) (convert-radix-number-to-decimal (cdr lst) (+ counter 1) radix)))))
 
 (define decimal-changed (lambda (text-field event)
+                          ; TODO: If input contains [^0-9] show error
                           (define input (string->number (send text-field get-value)))
+                          
                           (define octal (~r input #:base 8))
                           (define hex (~r input #:base '(up 16)))
                           (define binary (~r input #:base 2))
+                          
                           (send text-field-octal set-value octal)
                           (send text-field-hex set-value hex)
                           (send text-field-binary set-value binary)
+                          
                           (print input)))
 
 (define octal-changed (lambda (text-field event)
+                        ; TODO: If input contains [^0-9] show error
                         (define input (send text-field get-value))
                         (define input-list (reverse (string->list input)))
                         (define input-as-decimal (convert-radix-number-to-decimal input-list 0 8))
@@ -80,6 +85,7 @@
                         (print input)))
 
 (define hex-changed (lambda (text-field event)
+                      ; TODO: If input contains [^0-9A-F] show error
                       (define input (send text-field get-value))
                       (define input-list (reverse (string->list input)))
                       (define input-as-decimal (convert-radix-number-to-decimal input-list 0 16))
@@ -94,6 +100,7 @@
                       (print input)))
 
 (define binary-changed (lambda (text-field event)
+                         ; TODO: If input contains [^0-1] show error
                          (define input (send text-field get-value))
                          (define input-list (reverse (string->list input)))
                          (define input-as-decimal (convert-radix-number-to-decimal input-list 0 2))
