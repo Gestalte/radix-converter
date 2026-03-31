@@ -115,12 +115,12 @@
                                            (send text-field-hex set-value (string-upcase num))
                                            (send text-field-binary set-value binary)))
 
-                      (define input (send text-field get-value))
+                      (define input (string-upcase (send text-field get-value)))
                       
-                      (if (regexp-match "[^0-9A-F]" (string-upcase input))
+                      (if (regexp-match "[^0-9A-F]" input)
                           (show-error)
                           (when (> (string-length input) 0)
-                            (set-values input)))))
+                            (set-values  input)))))
 
 (define binary-changed (lambda (text-field event)
                          (define show-error (lambda ()
